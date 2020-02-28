@@ -5,7 +5,7 @@ This is a GitHub Action. You can use it to watch your pull requests for comments
 ## Example
 
 ```yaml
-on: issue_comment:
+on: issue_comment
 
 jobs:
   deploy:
