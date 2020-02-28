@@ -19,9 +19,9 @@ def error(msg: str) -> None:
     print(f"::error ::{msg}")
 
 
-def add_comment(url: str, msg: str, error: bool = False) -> None:
+def add_comment(url: str, msg: str, is_error: bool = False) -> None:
     debug(f"Add comment to {url}")
-    if error:
+    if is_error:
         error(msg)
     else:
         print(msg)
@@ -239,7 +239,7 @@ if __name__ == "__main__":
         validate_pr(pr)
         environment_name = parse_message(event["comment"])
     except DeploymentFailure as e:
-        add_comment(pr["comments_url"], f"Deployment failed: {e}", error=True)
+        add_comment(pr["comments_url"], f"Deployment failed: {e}", is_error=True)
         sys.exit(1)
 
     try:
@@ -255,7 +255,7 @@ if __name__ == "__main__":
         add_comment(
             pr["comments_url"],
             f"Deployment to {environment_name} failed: {e}",
-            error=True,
+            is_error=True,
         )
         sys.exit(1)
     else:
@@ -264,7 +264,7 @@ if __name__ == "__main__":
         add_comment(
             pr["comments_url"],
             f"@{comment_author}: Triggered [deployment](https://github.com/{head_repo}/deployments) to {environment_name}.",
-            error=False,
+            is_error=False,
         )
 
     debug("Finished.")
