@@ -57,7 +57,7 @@ def parse_message(comment: dict) -> str:
 
 def get_environment(environment: str) -> dict:
     if not CONFIG["env_file"]:
-        return
+        return {"name": environment}
     debug("Get environment")
     envs = json.load(open(CONFIG["env_file"]))
     debug("Loaded environment validation file")
