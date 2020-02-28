@@ -1,0 +1,36 @@
+name: Trigger GitHub Deployment with PR Comments
+description: Trigger GitHub Deployments with Pull Request comments
+author: Alex Jurkiewicz <alex@jurkiewi.cz>
+
+inputs:
+  trigger_phrase:
+    description: Trigger phrase you want to activate on. This action will take the remainder of the comment body as the environment, eg a message of `deploy to web3` will trigger a deployment to `web3`.
+    required: false
+    default: deploy to
+  environment_validation_file:
+    description: If specified, this is a JSON file in your repository that defines a whitelist of acceptable environments, as well as metadata about them. See below for more info.
+    required: false
+    default: ""
+  allow_draft:
+    description: If set to `true`, you can deploy draft PRs.
+    required: false
+    default: false
+  ignore_status_checks:
+    description: If set to `true`, you can deploy PRs with pending/failed status checks.
+    required: false
+    default: false
+  comment:
+    description: If set to `false`, comments will not be posted to the pull request.
+    required: false
+    default: true
+outputs:
+  deployment_id:
+    description: GitHub's ID for this deployment.
+  deployment_api_url:
+    description: URL to read deployment information.
+runs:
+  using: docker
+  image: Dockerfile
+branding:
+  color: gray-dark
+  icon: chevrons-up
