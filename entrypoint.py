@@ -74,7 +74,7 @@ def get_environment(environment: str) -> dict:
 def load_pr(url: str) -> dict:
     debug("Requesting PR details")
     pr_resp = requests.get(
-        CONFIG["pr_url"],
+        url,
         headers={
             **BASE_GH_REQUEST_HEADERS,
             "Accept": "application/vnd.github.shadow-cat-preview+json, application/vnd.github.sailor-v-preview+json",
@@ -227,7 +227,7 @@ if __name__ == "__main__":
 
     validate_event(event)
 
-    pr = load_pr(CONFIG["pr_url"])
+    pr = load_pr(event["issue"]["url"])
     debug(f"Loaded PR details: {json.dumps(pr)}")
     sha = pr["head"]["sha"]
     head_repo = pr["head"]["repo"]["full_name"]
