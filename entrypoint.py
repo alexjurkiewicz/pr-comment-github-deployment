@@ -195,7 +195,7 @@ def react_to_original_comment(event):
 
 
 if __name__ == "__main__":
-    if "GITHUB_ACTION" not in os.environ:
+    if "GITHUB_TOKEN" not in os.environ:
         error(
             r"Missing GITHUB_TOKEN environment variable. (hint: `env: GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}`)"
         )
