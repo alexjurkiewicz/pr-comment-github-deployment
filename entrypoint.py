@@ -162,7 +162,11 @@ def validate_pr(pr: dict) -> None:
     if mergeable_state != "mergeable":
         if mergeable_state == "draft" and CONFIG["allow_draft"]:
             pass
-        elif mergeable_state == "unstable" and CONFIG["ignore_status_checks"]:
+        # blocked = some checks still in progress. unstable = some checks failed
+        elif (
+            mergeable_state in ("blocked", "unstable")
+            and CONFIG["ignore_status_checks"]
+        ):
             pass
         else:
             raise DeploymentFailure("PR can't be cleanly merged with base branch.")
