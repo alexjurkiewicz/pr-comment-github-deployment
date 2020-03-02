@@ -135,8 +135,13 @@ def trigger_deployment(
     debug(f"Response: {trigger_resp.text}")
     try:
         trigger_resp.raise_for_status()
-    except:
-        raise DeploymentFailure(f"Failed to trigger deployment ({trigger_resp.text})")
+    except requests.exceptions.HTTPError as e:
+        msg = f"Failed to trigger deployment ({trigger_resp.text})"
+        resp = trigger_resp.json()
+        # "Conflict merging <base> into <head>"
+        if resp["message"].startswith("Conflict merging"):
+            msg = f"Failed to trigger deployment (merge conflict). Manually merge the base branch into your PR branch and try again."
+        raise DeploymentFailure(msg)
 
     set_deployment_outputs(trigger_resp)
 
