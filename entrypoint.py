@@ -257,6 +257,7 @@ if __name__ == "__main__":
     sha = pr["head"]["sha"]
     head_repo = pr["head"]["repo"]["full_name"]
     pr_num = pr["number"]
+    comment_author = event["comment"]["user"]["login"]
 
     try:
         environment = get_environment(environment_name)
@@ -265,7 +266,7 @@ if __name__ == "__main__":
             head_repo=head_repo,
             ref=sha,
             environment=environment,
-            description=f"Automatic deployment from #{pr_num}",
+            description=f"Automatic deployment from #{pr_num} requested by {comment_author}",
         )
     except DeploymentFailure as e:
         add_comment(
@@ -276,7 +277,6 @@ if __name__ == "__main__":
         sys.exit(1)
     else:
         react_to_original_comment(event)
-        comment_author = event["comment"]["user"]["login"]
         add_comment(
             pr["comments_url"],
             f"@{comment_author}: Triggered [deployment](https://github.com/{head_repo}/deployments) to {environment_name}.",
