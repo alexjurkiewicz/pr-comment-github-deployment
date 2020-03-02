@@ -38,18 +38,19 @@ def parse_message(comment: dict) -> str:
     debug("Parse comment")
     message = comment["body"]
     author = comment["user"]["login"]
+    trigger = CONFIG["trigger"]
 
-    if not message.startswith(CONFIG["trigger"]):
+    if not message.startswith(trigger):
         print(
-            f"Comment from {author} does not match the comment trigger (`{CONFIG['trigger']}`)."
+            f"Comment from {author} does not match the comment trigger (`{trigger}`)."
         )
         sys.exit(0)
 
-    environment = message[len(CONFIG["trigger"]) :].strip()
+    environment = message[len(trigger) :].strip()
 
     if not environment:
         raise DeploymentFailure(
-            f"No environment specified (usage: `{CONFIG['trigger']} environment`)."
+            f"No environment specified (usage: `{trigger} environment`)."
         )
 
     return environment
