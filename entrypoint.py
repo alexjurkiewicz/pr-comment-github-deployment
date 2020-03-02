@@ -150,6 +150,8 @@ def set_deployment_outputs(deployment_response):
 
 
 def validate_pr(pr: dict) -> None:
+    """Check the PR is valid. We might raise an error or simply end execution."""
+    # Check business logic
     if pr["draft"] and not CONFIG["allow_draft"]:
         raise DeploymentFailure("Can't deploy draft PRs.")
     if pr["merged"] or pr["merged_by"]:
@@ -229,11 +231,8 @@ if __name__ == "__main__":
 
     validate_event(event)
 
-    pr = load_pr(event["issue"]["url"])
+    pr = load_pr(event["issue"]["pull_request"]["url"])
     debug(f"Loaded PR details: {json.dumps(pr)}")
-    sha = pr["head"]["sha"]
-    head_repo = pr["head"]["repo"]["full_name"]
-    pr_num = pr["number"]
 
     # We load the environment_name in a seperate try-except block so we can use
     # environment_name in further error messages
@@ -243,6 +242,10 @@ if __name__ == "__main__":
     except DeploymentFailure as e:
         add_comment(pr["comments_url"], f"Deployment failed: {e}", is_error=True)
         sys.exit(1)
+
+    sha = pr["head"]["sha"]
+    head_repo = pr["head"]["repo"]["full_name"]
+    pr_num = pr["number"]
 
     try:
         environment = get_environment(environment_name)
