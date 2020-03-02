@@ -44,7 +44,7 @@ def parse_message(comment: dict) -> str:
         print(
             f"Comment from {author} does not match the comment trigger (`{trigger}`)."
         )
-        sys.exit(0)
+        return ""
 
     environment = message[len(trigger) :].strip()
 
@@ -239,11 +239,14 @@ if __name__ == "__main__":
     pr = load_pr(event["issue"]["pull_request"]["url"])
     debug(f"Loaded PR details: {json.dumps(pr)}")
 
-    # We load the environment_name in a seperate try-except block so we can use
-    # environment_name in further error messages
     try:
-        validate_pr(pr)
+        # Load this first, so we can have pretty error messages. If we can't parse
+        # the message, it's not a deploy request and we quietly exit.
         environment_name = parse_message(event["comment"])
+        if not environment_name:
+            sys.exit(0)
+
+        validate_pr(pr)
     except DeploymentFailure as e:
         add_comment(pr["comments_url"], f"Deployment failed: {e}", is_error=True)
         sys.exit(1)
