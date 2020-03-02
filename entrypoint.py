@@ -41,9 +41,7 @@ def parse_message(comment: dict) -> str:
     trigger = CONFIG["trigger"]
 
     if not message.startswith(trigger):
-        print(
-            f"Comment from {author} does not match the comment trigger (`{trigger}`)."
-        )
+        print(f"Comment from {author} does not match the trigger phrase (`{trigger}`).")
         return ""
 
     environment = message[len(trigger) :].strip()
