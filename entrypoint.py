@@ -140,7 +140,7 @@ def trigger_deployment(
         resp = trigger_resp.json()
         # "Conflict merging <base> into <head>"
         if resp["message"].startswith("Conflict merging"):
-            msg = f"Failed to trigger deployment (merge conflict). Manually merge the base branch into your PR branch and try again."
+            msg = "Failed to trigger deployment: your branch is behind the base branch."
         raise DeploymentFailure(msg)
 
     set_deployment_outputs(trigger_resp)
